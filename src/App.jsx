@@ -79,6 +79,13 @@ const Quiz = () => {
     }
   };
 
+  const resetQuiz = () => {
+    setCurrentQuestion(0);
+    setScore(0);
+    setShowScore(false);
+    setUserAnswers(Array(questions.length).fill(null));
+  };
+
   const summary = (
     <div className="summary">
       <table>
@@ -102,6 +109,7 @@ const Quiz = () => {
       <div className="final-score">
         You scored {score} out of {questions.length}
       </div>
+      <button onClick={resetQuiz}>Restart Quiz</button>
     </div>
   );
 

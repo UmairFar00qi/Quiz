@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import './App.css';
 
@@ -59,9 +58,16 @@ const Quiz = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
+  const [userAnswers, setUserAnswers] = useState(Array(questions.length).fill(null));
 
   const handleAnswerOptionClick = (selectedAnswer) => {
-    if (selectedAnswer === questions[currentQuestion].correctAnswer) {
+    const isCorrect = selectedAnswer === questions[currentQuestion].correctAnswer;
+    setUserAnswers(prevState => {
+      const updatedUserAnswers = [...prevState];
+      updatedUserAnswers[currentQuestion] = isCorrect;
+      return updatedUserAnswers;
+    });
+    if (isCorrect) {
       setScore(score + 1);
     }
 
@@ -73,11 +79,38 @@ const Quiz = () => {
     }
   };
 
+  const summary = (
+    <div className="summary">
+      <table>
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th>Your Answer</th>
+            <th>Correct Answer</th>
+          </tr>
+        </thead>
+        <tbody>
+          {questions.map((question, index) => (
+            <tr key={index} className={userAnswers[index] ? 'correct' : 'wrong'}>
+              <td>{question.question}</td>
+              <td>{userAnswers[index] ? 'Correct' : 'Wrong'}</td>
+              <td>{question.correctAnswer}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div className="final-score">
+        You scored {score} out of {questions.length}
+      </div>
+    </div>
+  );
+
   return (
     <div className="quiz">
       {showScore ? (
         <div className="score-section">
-          You scored {score} out of {questions.length}
+          <h2>Quiz Summary</h2>
+          {summary}
         </div>
       ) : (
         <>
@@ -99,4 +132,3 @@ const Quiz = () => {
 };
 
 export default Quiz;
-
